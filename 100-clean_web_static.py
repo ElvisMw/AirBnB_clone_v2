@@ -10,7 +10,7 @@ env.hosts = ['ubuntu@52.91.202.143', 'ubuntu@54.160.74.210']
 env.key_filename = '~/path/to/your/private/key'
 
 def do_clean(number=0):
-    """Deletes out-of-date archives"""
+    """Deletes out-of-date archives."""
     try:
         number = int(number)
     except ValueError:
