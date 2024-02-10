@@ -1,34 +1,63 @@
-#!/bin/bash
-
-# Install Nginx if not already installed
-if ! dpkg -l nginx &>/dev/null; then
-    apt-get update
-    apt-get install -y nginx
-fi
-
-# Create necessary directories if they don't exist
-mkdir -p /data/web_static/releases/test /data/web_static/shared
-
-# Create a fake HTML file
-echo -e '<html>\n\t<head>\n\t</head>\n\t<body>\n\t\tHolberton School\n\t</body>\n</html>' > /data/web_static/releases/test/index.html
-
-# Create or recreate symbolic link
-if [ -L /data/web_static/current ]; then
-    rm /data/web_static/current
-fi
-ln -s /data/web_static/releases/test /data/web_static/current
-
-# Give ownership to ubuntu user and group recursively
-chown -R ubuntu:ubuntu /data/
-
-# Update Nginx configuration
-config_file="/etc/nginx/sites-available/default"
-config_block="location /hbnb_static/ {\n\t\talias /data/web_static/current/;\n\t}\n"
-if ! grep -qF "$config_block" "$config_file"; then
-    sed -i "/server_name _;/a $config_block" "$config_file"
-fi
-
-# Restart Nginx
-service nginx restart
-
-exit 0
+# web_static deployment
+exec { '/usr/bin/env apt -y update' : }
+-> package { 'nginx':
+  ensure => installed,
+}
+-> file { '/data':
+  ensure  => 'directory'
+}
+-> file { '/data/web_static':
+  ensure => 'directory'
+}
+-> file { '/data/web_static/releases':
+  ensure => 'directory'
+}
+-> file { '/data/web_static/releases/test':
+  ensure => 'directory'
+}
+-> file { '/data/web_static/shared':
+  ensure => 'directory'
+}
+-> file { '/data/web_static/releases/test/index.html':
+  ensure  => 'present',
+  content => "<!DOCTYPE html>
+<html>
+  <head>
+  </head>
+  <body>
+    <p>Nginx server test</p>
+  </body>
+</html>"
+}
+-> file { '/data/web_static/current':
+  ensure => 'link',
+  target => '/data/web_static/releases/test'
+}
+-> exec { 'chown -R ubuntu:ubuntu /data/':
+  path => '/usr/bin/:/usr/local/bin/:/bin/'
+}
+-> file { '/var/www':
+  ensure => 'directory'
+}
+-> file { '/var/www/html':
+  ensure => 'directory'
+}
+-> file { '/var/www/html/index.html':
+  ensure  => 'present',
+  content => "<!DOCTYPE html>
+<html>
+  <head>
+  </head>
+  <body>
+    <p>Nginx server test</p>
+  </body>
+</html>"
+}
+exec { 'nginx_conf':
+  environment => ['data=\ \tlocation /hbnb_static {\n\t\talias /data/web_static/current;\n\t}\n'],
+  command     => 'sed -i "39i $data" /etc/nginx/sites-enabled/default',
+  path        => '/usr/bin:/usr/sbin:/bin:/usr/local/bin'
+}
+-> service { 'nginx':
+  ensure => running,
+}
