@@ -6,7 +6,7 @@ from datetime import datetime
 import os
 
 # Set the environment variables
-env.hosts = ['ubuntu@52.91.202.143', 'ubuntu@54.160.74.210']
+env.hosts = ['ubuntu@100.25.135.254', 'ubuntu@54.160.74.210']
 env.key_filename = '~/path/to/your/private/key'
 
 def do_clean(number=0):
