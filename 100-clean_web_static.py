@@ -1,26 +1,22 @@
 #!/usr/bin/python3
-"""Fabric script to clean outdated archives"""
+""" Deploying web static """
+from fabric.api import *
 
-from fabric.api import env, run, local
-from datetime import datetime
-import os
 
-# Set the environment variables
-env.hosts = ['ubuntu@100.25.135.254', 'ubuntu@54.160.74.210']
-env.key_filename = '~/path/to/your/private/key'
+env.hosts = ["100.25.135.254", "54.160.74.210"]
+env.user = "ubuntu"
+
 
 def do_clean(number=0):
-    """Deletes out-of-date archives."""
-    try:
-        number = int(number)
-    except ValueError:
-        return
+    """ CLEANS """
 
-    if number < 0:
-        return
+    number = int(number)
 
-    # Local cleanup
-    local("ls -1t versions | tail -n +{} | xargs -I {{}} rm versions/{{}}".format(number + 1))
+    if number == 0:
+        number = 2
+    else:
+        number += 1
 
-    # Remote cleanup
-    run("ls -1t /data/web_static/releases | tail -n +{} | xargs -I {{}} rm -rf /data/web_static/releases/{{}}".format(number + 1))
+    local('cd versions ; ls -t | tail -n +{} | xargs rm -rf'.format(number))
+    path = '/data/web_static/releases'
+    run('cd {} ; ls -t | tail -n +{} | xargs rm -rf'.format(path, number))
