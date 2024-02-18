@@ -4,6 +4,7 @@ This module defines a class to manage file storage for hbnb clone.
 """
 
 import json
+from models import storage  # Add this import statement
 
 
 class FileStorage:
@@ -90,3 +91,9 @@ class FileStorage:
         if obj:
             key = "{}.{}".format(obj.__class__.__name__, obj.id)
             FileStorage.__objects.pop(key, None)
+
+    def close(self):
+        """
+        Calls the reload() method for deserializing the JSON file to objects.
+        """
+        self.reload()

@@ -25,7 +25,7 @@ class DBStorage:
         """
         Initialize DBStorage instance.
 
-        Sets up the SQLAlchemy engine and performs additional actions for testing environment.
+        Sets up the SQLAlchemy engine and performs additional actions for the testing environment.
         """
         user = environ.get('HBNB_MYSQL_USER')
         password = environ.get('HBNB_MYSQL_PWD')
@@ -94,3 +94,10 @@ class DBStorage:
         self.__session = scoped_session(
             sessionmaker(bind=self.__engine, expire_on_commit=False)
         )
+
+    def close(self):
+        """
+        Calls the remove() method on the private session attribute (self.__session)
+        or close() on the class Session.
+        """
+        self.__session.close()
