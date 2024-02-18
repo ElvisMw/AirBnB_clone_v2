@@ -1,48 +1,37 @@
 #!/usr/bin/python3
 """
-Flask web application
+Flask web application as per task 3
 """
 
-from flask import Flask, escape
+from flask import Flask
 
 app = Flask(__name__)
 
 
 @app.route('/', strict_slashes=False)
 def hello_hbnb():
-    """
-    Display "Hello HBNB!"
-    """
-    return 'Hello HBNB!'
+    """Shows 'Hello HBNB!'"""
+    return "Hello HBNB!"
 
 
 @app.route('/hbnb', strict_slashes=False)
 def hbnb():
-    """
-    Display "HBNB"
-    """
-    return 'HBNB'
+    """Displays 'HBNB'"""
+    return "HBNB"
 
 
 @app.route('/c/<text>', strict_slashes=False)
-def c_route(text):
-    """
-    Display "C ", then value of the text variable
-    Replace underscore _ symbols with a space
-    """
-    return 'C ' + escape(text.replace('_', ' '))
+def c_text(text):
+    """Displays 'C ', then value of the text variable"""
+    return "C {}".format(text.replace('_', ' '))
 
 
 @app.route('/python/', defaults={'text': 'is cool'}, strict_slashes=False)
 @app.route('/python/<text>', strict_slashes=False)
-def python_route(text):
-    """
-    Display "Python ", then value of the text variable
-    Replace underscore _ symbols with a space
-    Default value of text is "is cool"
-    """
-    return 'Python ' + escape(text.replace('_', ' '))
+def python_text(text):
+    """Displays 'Python ', then value of the text variable."""
+    return "Python {}".format(text.replace('_', ' '))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5000)
