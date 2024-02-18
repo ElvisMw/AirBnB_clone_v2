@@ -27,7 +27,7 @@ def hbnb():
 @app.route('/c/<text>', strict_slashes=False)
 def c_route(text):
     """
-    Route that displays "C " followed by the value of the text variable.
+    Route that displays "C " then value of the text variable.
     Replace underscore _ symbols with a space.
     """
     return "C {}".format(text.replace("_", " "))
@@ -35,4 +35,3 @@ def c_route(text):
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5000)
-
