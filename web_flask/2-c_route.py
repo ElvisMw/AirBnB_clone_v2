@@ -3,8 +3,8 @@
 This module starts a Flask web application with three routes:
 - /: displays "Hello HBNB!"
 - /hbnb: displays "HBNB"
-- /c/<text>: displays "C " followed by the value of
-the text variable (replace underscore _ symbols with a space)
+- /c/<text>: displays "C " followed by the
+value of the text variable (replace underscore _ symbols with a space)
 """
 
 from flask import Flask, escape
@@ -31,4 +31,4 @@ def display_c_text(text):
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000)
+    app.run(host="0.0.0.0", port=5000, debug=False)
