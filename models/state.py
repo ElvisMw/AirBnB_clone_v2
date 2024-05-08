@@ -8,6 +8,7 @@ from sqlalchemy import Column, String, relationship
 from os import environ
 from models import storage  # Add this import statement
 
+
 class State(BaseModel, Base):
     """
     State class.
@@ -16,7 +17,9 @@ class State(BaseModel, Base):
     - name (str): Name of the state.
 
     Relationships:
-    - cities (relationship): One-to-Many relationship with City, back-referenced as 'state', with cascade behavior 'all, delete-orphan'.
+    - cities (relationship): One-to-Many relationship with
+    City, back-referenced as 'state', with cascade
+    behavior 'all, delete-orphan'.
     """
 
     __tablename__ = 'states'
@@ -28,6 +31,7 @@ class State(BaseModel, Base):
         @property
         def cities(self):
             """
-            Return the list of City instances with state_id equals to the current State.id.
+            Return the list of City instances with state_id
+            equals to the current State.id.
             """
             return [city for city in storage.all(City).values() if city.state_id == self.id]
